@@ -12,8 +12,16 @@ echo "ro.build.version.release=$PLATFORM_VERSION"
 echo "ro.build.date=`date`"
 echo "ro.build.date.utc=`date +%s`"
 echo "ro.build.type=$TARGET_BUILD_TYPE"
-echo "ro.build.user=$USER"
-echo "ro.build.host=`hostname`"
+
+if [ -z "$BUILD_USER_ID" ]
+then
+  echo "ro.build.user=$USER"
+  echo "ro.build.host=`hostname`"
+else
+  echo "ro.build.user=$BUILD_USER_ID"
+  echo "ro.build.host=androidarmv6"
+fi
+
 echo "ro.build.tags=$BUILD_VERSION_TAGS"
 echo "ro.product.brand=$PRODUCT_BRAND"
 echo "ro.product.board=$TARGET_BOOTLOADER_BOARD_NAME"
