@@ -48,14 +48,14 @@ android_team = "android-legacy"
 
 def check_repo_exists(git_data):
     if not int(git_data.get('total_count', 0)):
-        raise Exception("{} not found in {} Github, exiting "
+        raise Exception("{0} not found in {1} Github, exiting "
                         "roomservice".format(device, android_team))
 
 
 # Note that this can only be done 5 times per minute
 def search_github_for_device(device):
     git_search_url = "https://api.github.com/search/repositories" \
-                     "?q=%40{}+android_device+{}+fork:true".format(android_team, device)
+                     "?q=%40{0}+android_device+{1}+fork:true".format(android_team, device)
     git_req = urllib.request.Request(git_search_url)
     # this api is a preview at the moment. accept the custom media type
     git_req.add_header('Accept', 'application/vnd.github.preview')
@@ -66,7 +66,7 @@ def search_github_for_device(device):
                         " Please try again in a minute")
     git_data = json.load(response)
     check_repo_exists(git_data)
-    print("found the {} device repo".format(device))
+    print("found the {0} device repo".format(device))
     return git_data
 
 
@@ -74,7 +74,7 @@ def get_device_url(git_data):
     device_url = ""
     for item in git_data['items']:
         temp_url = item.get('html_url')
-        if "{}/android_device".format(android_team) in temp_url:
+        if "{0}/android_device".format(android_team) in temp_url:
             try:
                 temp_url = temp_url[temp_url.index("android_device"):]
             except ValueError:
@@ -86,7 +86,7 @@ def get_device_url(git_data):
 
     if device_url:
         return device_url
-    raise Exception("{} not found in {} Github, exiting "
+    raise Exception("{0} not found in {1} Github, exiting "
                     "roomservice".format(device, android_team))
 
 
@@ -96,7 +96,7 @@ def parse_device_directory(device_url,device):
     repo_name = repo_name[:repo_name.index(device)]
     repo_dir = repo_name.replace("_", "/")
     repo_dir = repo_dir + device
-    return "device{}".format(repo_dir)
+    return "device{0}".format(repo_dir)
 
 
 # Thank you RaYmAn
@@ -267,6 +267,9 @@ def fetch_device(device):
     git_data = search_github_for_device(device)
     device_url = get_device_url(git_data)
     device_dir = parse_device_directory(device_url,device)
+    if default_team_rem == "github":
+        if not "/" in device_url:
+            device_url = '/'.join([android_team, device_url])
     project = create_manifest_project(device_url,
                                       device_dir,
                                       remote=default_team_rem)
