@@ -1668,6 +1668,8 @@ if [ "x$SHELL" != "x/bin/bash" ]; then
     esac
 fi
 
+source build/customsetup.sh
+
 # Execute the contents of any vendorsetup.sh files we can find.
 for f in `test -d device && find device -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null` \
          `test -d vendor && find vendor -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null`
