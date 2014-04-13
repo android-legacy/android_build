@@ -19,7 +19,7 @@ then
   echo "ro.build.host=`hostname`"
 else
   echo "ro.build.user=$BUILD_USER_ID"
-  echo "ro.build.host=androidarmv6"
+  echo "ro.build.host=android-legacy"
 fi
 
 echo "ro.build.tags=$BUILD_VERSION_TAGS"
