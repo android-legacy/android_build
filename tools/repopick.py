@@ -42,7 +42,7 @@ except ImportError:
 # Parse the command line
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=textwrap.dedent('''\
     repopick.py is a utility to simplify the process of cherry picking
-    patches from CyanogenMod's Gerrit instance.
+    patches from AndroidARMv6's Gerrit instance.
 
     Given a list of change numbers, repopick will cd into the project path
     and cherry pick the latest patch available.
@@ -236,7 +236,7 @@ for change in args.change_number:
     # gerrit returns two lines, a magic string and then valid JSON:
     #   )]}'
     #   [ ... valid JSON ... ]
-    url = 'http://review.cyanogenmod.org/changes/?q=%s&o=CURRENT_REVISION&o=CURRENT_COMMIT&pp=0' % change
+    url = 'http://review.cas-online.nl/changes/?q=%s&o=CURRENT_REVISION&o=CURRENT_COMMIT&pp=0' % change
     if args.verbose:
         print('Fetching from: %s\n' % url)
     f = urllib.request.urlopen(url)
@@ -268,8 +268,12 @@ for change in args.change_number:
     status           = data['status']
     current_revision = data['revisions'][data['current_revision']]
     patch_number     = current_revision['_number']
-    fetch_url        = current_revision['fetch']['anonymous http']['url']
-    fetch_ref        = current_revision['fetch']['anonymous http']['ref']
+    if 'anonymous http' in current_revision['fetch']:
+        fetch_url    = current_revision['fetch']['anonymous http']['url']
+        fetch_ref    = current_revision['fetch']['anonymous http']['ref']
+    else:
+        fetch_url    = current_revision['fetch']['http']['url']
+        fetch_ref    = current_revision['fetch']['http']['ref']
     author_name      = current_revision['commit']['author']['name']
     author_email     = current_revision['commit']['author']['email']
     author_date      = current_revision['commit']['author']['date'].replace(date_fluff, '')
