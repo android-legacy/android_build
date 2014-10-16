@@ -51,7 +51,7 @@ except:
     device = product
 
 if not depsonly:
-    print("Device %s not found. Attempting to retrieve device repository from android-legacy Github (http://github.com/android-legacy)." % device)
+    print("Device %s not found. Attempting to retrieve device repository from M2Dev Github (http://github.com/M2Dev)." % device)
 
 repositories = []
 
@@ -71,7 +71,7 @@ def add_auth(githubreq):
 
 page = 1
 while not depsonly:
-    githubreq = urllib.request.Request("https://api.github.com/users/android-legacy/repos?per_page=200&page=%d" % page)
+    githubreq = urllib.request.Request("https://api.github.com/users/M2Dev/repos?per_page=200&page=%d" % page)
     add_auth(githubreq)
     result = json.loads(urllib.request.urlopen(githubreq).read().decode())
     if len(result) == 0:
@@ -170,12 +170,12 @@ def add_to_manifest(repositories, fallback_branch = None):
         repo_name = repository['repository']
         repo_target = repository['target_path']
         if exists_in_tree(lm, repo_name):
-            print('android-legacy/%s already exists' % (repo_name))
+            print('M2Dev/%s already exists' % (repo_name))
             continue
 
-        print('Adding dependency: android-legacy/%s -> %s' % (repo_name, repo_target))
+        print('Adding dependency: M2Dev/%s -> %s' % (repo_name, repo_target))
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "android-legacy/%s" % repo_name })
+            "remote": "github", "name": "M2Dev/%s" % repo_name })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -206,7 +206,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         fetch_list = []
 
         for dependency in dependencies:
-            if not is_in_manifest("android-legacy/%s" % dependency['repository']):
+            if not is_in_manifest("M2Dev/%s" % dependency['repository']):
                 fetch_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
 
@@ -289,4 +289,4 @@ else:
             print("Done")
             sys.exit()
 
-print("Repository for %s not found in the android-legacy Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
+print("Repository for %s not found in the M2Dev Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
